@@ -21,14 +21,13 @@ jobs:
           
       - name: Download Screaming Frog SEO Spider
         run: |
-          wget https://download.screamingfrog.co.uk/products/seo-spider/screamingfrogseospider_linux.tar.gz
-          tar -xzf screamingfrogseospider_linux.tar.gz
+          wget https://www.screamingfrog.co.uk/products/seo-spider/ScreamingFrogSEOSpider-18.3.tar.gz
+          tar -xzf ScreamingFrogSEOSpider-*.tar.gz
           
       - name: Run Screaming Frog Crawler
         run: |
           ./screamingfrogseospider/screamingfrogseospider --headless \
           --crawl ${{ secrets.WEBSITE_URL }} \
-          --config-file ./config.txt \
           --save-crawl --output-folder ./results \
           --license ${{ secrets.SCREAMING_FROG_LICENSE }}
           
