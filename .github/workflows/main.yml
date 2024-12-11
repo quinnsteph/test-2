@@ -1,0 +1,39 @@
+name: Screaming Frog SEO Audit
+
+on:
+  schedule:
+    - cron: '0 0 * * 1'  # Runs weekly on Monday at midnight
+  workflow_dispatch:      # Allows manual triggering
+
+jobs:
+  seo-audit:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          
+      - name: Download Screaming Frog SEO Spider
+        run: |
+          wget https://download.screamingfrog.co.uk/products/seo-spider/screamingfrogseospider_linux.tar.gz
+          tar -xzf screamingfrogseospider_linux.tar.gz
+          
+      - name: Run Screaming Frog Crawler
+        run: |
+          ./screamingfrogseospider/screamingfrogseospider --headless \
+          --crawl ${{ secrets.WEBSITE_URL }} \
+          --config-file ./config.txt \
+          --save-crawl --output-folder ./results \
+          --license ${{ secrets.SCREAMING_FROG_LICENSE }}
+          
+      - name: Upload results
+        uses: actions/upload-artifact@v3
+        with:
+          name: seo-audit-results
+          path: ./results
