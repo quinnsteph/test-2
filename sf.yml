@@ -1,0 +1,29 @@
+name: Screaming Frog Crawl Automation
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  crawl:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+      
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.8'
+          
+      - name: Install Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y screamingfrogseo
+          pip install requests  # for handling HTTP requests if needed
+
+      - name: Run Screaming Frog Crawl
+        run: |
+          screamingfrogseotool --crawl https://yourwebsite.com --output /path/to/store/results
